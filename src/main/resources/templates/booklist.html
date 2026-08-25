@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        #searchInput {
+            width: 300px;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Book List</h2>
+
+<!-- Search Box -->
+<input type="text"
+       id="searchInput"
+       placeholder="Search book by name..."
+       onkeyup="searchBooks()">
+
+<table id="bookTable">
+
+    <thead>
+    <tr>
+        <th>Book Id</th>
+        <th>Book Name</th>
+        <th>Author</th>
+        <th>Price</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="book : ${books}">
+
+        <td th:text="${book.id}"></td>
+
+        <td class="bookTitle"
+            th:text="${book.title}"></td>
+
+        <td th:text="${book.author}"></td>
+
+        <td th:text="${book.price}"></td>
+
+        <td>
+            <a th:href="@{/editBook/{id}(id=${book.id})}">
+                Edit
+            </a>
+        </td>
+
+        <td>
+            <a th:href="@{/deleteBook/{id}(id=${book.id})}"
+               onclick="return confirm('Are you sure you want to delete this book?')">
+                Delete
+            </a>
+        </td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+<script>
+
+function searchBooks() {
+
+    let input = document.getElementById("searchInput");
+    let searchValue = input.value.toLowerCase();
+
+    let rows = document.querySelectorAll("#bookTable tbody tr");
+
+    rows.forEach(function(row) {
+
+        let bookName = row
+            .querySelector(".bookTitle")
+            .textContent
+            .toLowerCase();
+
+        if (bookName.includes(searchValue)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
+
+</script>
+
+</body>
+</html>
